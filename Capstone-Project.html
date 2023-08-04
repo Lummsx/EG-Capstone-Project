@@ -423,7 +423,7 @@ analysis</li>
 </ol>
 </div>
 <div id="prepare---step-2-upload-inspect-and-clean-the-data" class="section level2">
-<h2>Prepare - Step 2: Upload, inspect and clean the data</h2>
+<h2>Prepare - Step 2: Upload, Inspect and Clean the Data</h2>
 <div id="uploading" class="section level3">
 <h3>Uploading</h3>
 <p>This Kaggle data set contains personal fitness trackers from
@@ -680,6 +680,154 @@ removed</li>
 </ul>
 <pre class="r"><code>sum(duplicated(daily_sleep))</code></pre>
 <pre><code>## [1] 0</code></pre>
+<pre class="r"><code>any(is.na(daily_activity))</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>any(is.na(daily_sleep))</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>any(is.na(heartrate))</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<ul>
+<li>weight_log is the only object that has missing values</li>
+</ul>
+<pre class="r"><code>any(is.na(weight_log))</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<ul>
+<li>Only 2 rows of the entire column “Fat” have data. In this situation,
+without any actual stakeholders to communicate with; our only solution
+is to remove the whole column. If we remove every row with empty data,
+we’ll be left with 2.</li>
+</ul>
+<pre class="r"><code>head(weight_log)</code></pre>
+<pre><code>## # A tibble: 6 × 8
+##           Id Date       WeightKg WeightPounds   Fat   BMI IsManualReport   LogId
+##        &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt;
+## 1 1503960366 5/2/2016 …     52.6         116.    22  22.6 TRUE           1.46e12
+## 2 1503960366 5/3/2016 …     52.6         116.    NA  22.6 TRUE           1.46e12
+## 3 1927972279 4/13/2016…    134.          294.    NA  47.5 FALSE          1.46e12
+## 4 2873212765 4/21/2016…     56.7         125.    NA  21.5 TRUE           1.46e12
+## 5 2873212765 5/12/2016…     57.3         126.    NA  21.7 TRUE           1.46e12
+## 6 4319703577 4/17/2016…     72.4         160.    25  27.5 TRUE           1.46e12</code></pre>
+<ul>
+<li>We went from 8 columns to 7. Column “Fat” has been removed</li>
+</ul>
+<pre class="r"><code>weight_log &lt;- weight_log[, -which(names(weight_log) == &quot;Fat&quot;)]
+head(weight_log)</code></pre>
+<pre><code>## # A tibble: 6 × 7
+##           Id Date             WeightKg WeightPounds   BMI IsManualReport   LogId
+##        &lt;dbl&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;            &lt;dbl&gt;
+## 1 1503960366 5/2/2016 11:59:…     52.6         116.  22.6 TRUE           1.46e12
+## 2 1503960366 5/3/2016 11:59:…     52.6         116.  22.6 TRUE           1.46e12
+## 3 1927972279 4/13/2016 1:08:…    134.          294.  47.5 FALSE          1.46e12
+## 4 2873212765 4/21/2016 11:59…     56.7         125.  21.5 TRUE           1.46e12
+## 5 2873212765 5/12/2016 11:59…     57.3         126.  21.7 TRUE           1.46e12
+## 6 4319703577 4/17/2016 11:59…     72.4         160.  27.5 TRUE           1.46e12</code></pre>
+<ul>
+<li>Now our data is clean</li>
+</ul>
+<pre class="r"><code>rm(duplicates)</code></pre>
+</div>
+</div>
+<div id="process---step-3-performing-data-analysis-procedures" class="section level2">
+<h2>Process - Step 3: Performing Data Analysis Procedures</h2>
+<p>Since our goal is to essentially give broad strokes data about the
+Bellabeats users, we want to mainly focus on daily data, specifically
+the “dailyActivity_merged” file, as our nexus. “dailyActivity_merged”
+has all the “daily” sheet-titled columns already merged into it,
+simplifying the process and giving us a clear starting point.</p>
+<p>Other sheets that can be useful here are:</p>
+<ul>
+<li><p>heartrate_seconds_merged: However, all we will be using this for
+is a summary(). The heart rate sheet has good data but was only used by
+14 of the 33 participants in the study, leaving it with subpar
+data.</p></li>
+<li><p>sleepDay_merged: However, a column needs to be created to allow
+proper plotting later on.</p></li>
+<li><p>weight_log: However, all we will be using this for is a
+summary(). The weight sheet has poor data, inconsistent times of
+measurement, and, most importantly, is only used by 8 of the 33
+volunteers sharing their data, leaving it with subpar data.</p></li>
+</ul>
+<pre class="r"><code>daily_activity %&gt;%  
+  select(TotalSteps,
+         TotalDistance,
+         SedentaryMinutes) %&gt;%
+  summary()</code></pre>
+<pre><code>##    TotalSteps    TotalDistance    SedentaryMinutes
+##  Min.   :    0   Min.   : 0.000   Min.   :   0.0  
+##  1st Qu.: 3790   1st Qu.: 2.620   1st Qu.: 729.8  
+##  Median : 7406   Median : 5.245   Median :1057.5  
+##  Mean   : 7638   Mean   : 5.490   Mean   : 991.2  
+##  3rd Qu.:10727   3rd Qu.: 7.713   3rd Qu.:1229.5  
+##  Max.   :36019   Max.   :28.030   Max.   :1440.0</code></pre>
+<pre class="r"><code>daily_activity%&gt;%
+  select(VeryActiveMinutes, FairlyActiveMinutes, LightlyActiveMinutes) %&gt;%
+  summary()</code></pre>
+<pre><code>##  VeryActiveMinutes FairlyActiveMinutes LightlyActiveMinutes
+##  Min.   :  0.00    Min.   :  0.00      Min.   :  0.0       
+##  1st Qu.:  0.00    1st Qu.:  0.00      1st Qu.:127.0       
+##  Median :  4.00    Median :  6.00      Median :199.0       
+##  Mean   : 21.16    Mean   : 13.56      Mean   :192.8       
+##  3rd Qu.: 32.00    3rd Qu.: 19.00      3rd Qu.:264.0       
+##  Max.   :210.00    Max.   :143.00      Max.   :518.0</code></pre>
+<pre class="r"><code>daily_activity %&gt;%  
+  select(Calories) %&gt;%
+  summary()</code></pre>
+<pre><code>##     Calories   
+##  Min.   :   0  
+##  1st Qu.:1828  
+##  Median :2134  
+##  Mean   :2304  
+##  3rd Qu.:2793  
+##  Max.   :4900</code></pre>
+<pre class="r"><code>daily_sleep %&gt;%
+  select(TotalMinutesAsleep, TotalTimeInBed, TotalSleepRecords) %&gt;%
+  summary()</code></pre>
+<pre><code>##  TotalMinutesAsleep TotalTimeInBed  TotalSleepRecords
+##  Min.   : 58.0      Min.   : 61.0   Min.   :1.00     
+##  1st Qu.:361.0      1st Qu.:403.8   1st Qu.:1.00     
+##  Median :432.5      Median :463.0   Median :1.00     
+##  Mean   :419.2      Mean   :458.5   Mean   :1.12     
+##  3rd Qu.:490.0      3rd Qu.:526.0   3rd Qu.:1.00     
+##  Max.   :796.0      Max.   :961.0   Max.   :3.00</code></pre>
+<pre class="r"><code>weight_log  %&gt;%
+  select(WeightPounds, BMI) %&gt;%
+  summary()</code></pre>
+<pre><code>##   WeightPounds        BMI       
+##  Min.   :116.0   Min.   :21.45  
+##  1st Qu.:135.4   1st Qu.:23.96  
+##  Median :137.8   Median :24.39  
+##  Mean   :158.8   Mean   :25.19  
+##  3rd Qu.:187.5   3rd Qu.:25.56  
+##  Max.   :294.3   Max.   :47.54</code></pre>
+<pre class="r"><code>heartrate %&gt;%
+  select(Value) %&gt;%
+  summary()</code></pre>
+<pre><code>##      Value       
+##  Min.   : 36.00  
+##  1st Qu.: 63.00  
+##  Median : 73.00  
+##  Mean   : 77.33  
+##  3rd Qu.: 88.00  
+##  Max.   :203.00</code></pre>
+</div>
+<div id="analyze---step-4-analysis" class="section level2">
+<h2>Analyze - Step 4: Analysis</h2>
+<p>My predictions based on current analysis:</p>
+<ul>
+<li>People will get most rest on the weekends</li>
+<li>The week days will contain the most amount of steps</li>
+<li>The more activity the more calories people will consume</li>
+<li>The more time in bed the more sleep will be accomplished</li>
+<li>The more steps someone takes the better their rest will be</li>
+<li>The more steps people take the more calories people will
+consume</li>
+<li>Users will be sedentary the vast majority of their day</li>
+</ul>
+</div>
+<div id="share---step-5-data-visualization" class="section level2">
+<h2>Share - Step 5: Data Visualization</h2>
+<div id="daily-sleep-pot" class="section level3">
+<h3>Daily Sleep Pot</h3>
 </div>
 </div>
 

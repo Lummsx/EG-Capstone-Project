@@ -91,7 +91,7 @@ I will produce a report with the following deliverables:
 6. Your top high-level content recommendations based on your analysis
 
 
-## Prepare - Step 2: Upload, inspect and clean the data
+## Prepare - Step 2: Upload, Inspect and Clean the Data
 
 ### Uploading
 
@@ -192,3 +192,118 @@ daily_sleep <- daily_sleep[!duplicated(daily_sleep), ]
 ``` {r checking that the duplicates are gone.}
 sum(duplicated(daily_sleep))
 ```
+
+
+``` {r checking for any missing values}
+any(is.na(daily_activity))
+any(is.na(daily_sleep))
+any(is.na(heartrate))
+```
+
+
+* weight_log is the only object that has missing values 
+``` {r checking for any missing values1}
+any(is.na(weight_log))
+```
+
+
+* Only 2 rows of the entire column "Fat" have data. In this situation, without 
+any actual stakeholders to communicate with; our only solution is to remove 
+the whole column. If we remove every row with empty data, we'll be left with 2.
+``` {r displaying the tibble that contains the missing values}
+head(weight_log)
+```
+
+
+* We went from 8 columns to 7. Column "Fat" has been removed
+``` {r removing the column "Fat" from weight_log}
+weight_log <- weight_log[, -which(names(weight_log) == "Fat")]
+head(weight_log)
+```
+
+
+* Now our data is clean
+``` {r removing the extra object}
+rm(duplicates)
+```
+
+
+## Process - Step 3: Performing Data Analysis Procedures
+
+
+Since our goal is to essentially give broad strokes data about the Bellabeats users, we want to mainly focus on daily data, specifically the "dailyActivity_merged" file, as our nexus. "dailyActivity_merged" has all the "daily" sheet-titled columns already merged into it, simplifying the process and giving us a clear starting point.
+
+
+Other sheets that can be useful here are:
+
+* heartrate_seconds_merged: However, all we will be using this for is a summary(). The heart rate sheet has good data but was only used by 14 of the 33 participants in the study, leaving it with subpar data.
+
+* sleepDay_merged: However, a column needs to be created to allow proper plotting later on.
+
+* weight_log: However, all we will be using this for is a summary(). The weight sheet has poor data, inconsistent times of measurement, and, most importantly, is only used by 8 of the 33 volunteers sharing their data, leaving it with subpar data.
+
+
+``` {r daily_activity summary}
+daily_activity %>%  
+  select(TotalSteps,
+         TotalDistance,
+         SedentaryMinutes) %>%
+  summary()
+```
+
+
+``` {r daily_activity per category in minutes}
+daily_activity%>%
+  select(VeryActiveMinutes, FairlyActiveMinutes, LightlyActiveMinutes) %>%
+  summary()
+```
+
+
+``` {r daily_activity calories}
+daily_activity %>%  
+  select(Calories) %>%
+  summary()
+```
+
+
+``` {r daily_sleep summary}
+daily_sleep %>%
+  select(TotalMinutesAsleep, TotalTimeInBed, TotalSleepRecords) %>%
+  summary()
+```
+
+
+``` {r weight summary}
+weight_log  %>%
+  select(WeightPounds, BMI) %>%
+  summary()
+```
+
+
+``` {r heartrate summary}
+heartrate %>%
+  select(Value) %>%
+  summary()
+```
+
+
+## Analyze - Step 4: Analysis
+
+
+My predictions based on current analysis:
+
+  * People will get most rest on the weekends
+  * The week days will contain the most amount of steps
+  * The more activity the more calories people will consume
+  * The more time in bed the more sleep will be accomplished
+  * The more steps someone takes the better their rest will be
+  * The more steps people take the more calories people will consume
+  * Users will be sedentary the vast majority of their day
+  
+
+## Share - Step 5: Data Visualization
+
+
+### Daily Sleep Pot
+
+
