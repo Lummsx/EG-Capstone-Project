@@ -3,8 +3,8 @@ title: 'Case Study 2: Bellabeat Analysis'
 author: "Erik Gonzalez"
 date: "2023-08-03"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 linkedin: "https://www.linkedin.com/in/gonzalez-erik/"
 email: egonzalez191991@gmail.com
 ---
