@@ -1,10 +1,12 @@
 ---
-title: "Case Study 2: Bellabeat Analysis"
+title: 'Case Study 2: Bellabeat Analysis'
 author: "Erik Gonzalez"
 date: "2023-08-03"
-email: "egonzalez191991@gmail.com"
+output:
+  pdf_document: default
+  html_document: default
 linkedin: "https://www.linkedin.com/in/gonzalez-erik/"
-output: html_document
+email: egonzalez191991@gmail.com
 ---
 
 ``` {r stop warning, include=FALSE}
@@ -619,3 +621,82 @@ not individual records.
 
 
 -------------------------------------------------------------------------------
+ 
+  
+### Percentage of Activity in Minutes Plot
+  
+* Very active minutes :  1.74% 
+* Fairly active minutes :  1.11% 
+* Lightly active minutes :  15.82% 
+* Sedentary minutes :  81.33% 
+   
+
+``` {r } 
+# Percent of activity in minutes
+very_active_mins <- sum(daily_activity$VeryActiveMinutes)
+fairly_active_mins <- sum(daily_activity$FairlyActiveMinutes)
+lightly_active_mins <- sum(daily_activity$LightlyActiveMinutes)
+sedentary_mins <- sum(daily_activity$SedentaryMinutes)
+
+slices <- c(very_active_mins, fairly_active_mins, lightly_active_mins, sedentary_mins)
+labels <- c('Very active minutes: 1.74%', 'Fairly active minutes: 1.11%', 'Lightly active minutes: 15.82%', 'Sedentary minutes: 81.33%')
+
+colors <- c("#FFD700", "#C4C4C4", "#CD7F32", "#5A5A5A")
+
+pie(slices, labels = labels,
+    main = 'Percentage of activity in minutes',
+    col = colors,
+    border = "white", font.main = 2,cex.main = 1.5)
+```
+
+
+--------------------------------------------------------------------------------
+
+
+## Act - Step 6: Conclusion and Next Steps
+
+
+### Conclusion
+
+
+After analyzing Bellabeat's data, I have found some insights that would help influence the marketing strategy:
+
+
+* The average daily sleep is roughly 7 hours, which is on par for adults per the [Mayo Clinic Sleep Recommedations](https://www.mayoclinic.org/healthy-lifestyle/adult-health/expert-answers/how-many-hours-of-sleep-are-enough/faq-20057898)
+
+
+* The average total steps per day are 7608, which is less than the recommended 10,000 per the [Mayo Clinic Recommended Steps per Day](https://www.mayoclinic.org/healthy-lifestyle/fitness/in-depth/10000-steps/art-20317391)
+
+* Calories remain consistent outside of Tuesdays, which is surprising; Tuesdays also include the second highest amount of steps and the least amount of sleep
+
+* The more active a person is, the more calories are consumed
+
+* Total steps have zero correlation with the amount of sleep users got
+
+* There is a correlation between total steps and calories. The more steps, the more calories
+
+* Users spent the vast majority of their time sedentary
+
+
+* The average weight and average BMI are slightly greater than the ideal weight and BMI per the [Mayo Clinic Recommended BMI](https://newsnetwork.mayoclinic.org/discussion/mayo-clinic-q-and-a-bmi-is-not-the-only-indicator-of-your-overall-health/) although I lack information on gender, age and height
+
+
+* The average heart rate is 77, which is normal according to the [Mayo Clinic](https://www.mayoclinic.org/healthy-lifestyle/fitness/expert-answers/heart-rate/faq-20057979)
+
+
+Overall, I find the data useful but also inconclusive; two months does not equate to enough findings, and lacking personal information such as age, gender, and height is paramount to concrete results.
+
+
+## Next Steps
+
+
+### A multi-functional device:
+
+The wearable device 'Ivy' is their best product and should be marketed, which in turn will boost subscription sales from the app. Bellabeat should advertise that their products are meant to be worn every day and in all scenarios, from sports and exercising to relaxing and sleeping. Displaying more value on the product as they are meant to accompany them wherever they go for any situation. Which in turn will boost their knowledge about their bodies and lifestyles and help them track information to improve overall fitness and health. This will encourage women from all demographics, features, and backgrounds to use Bellabeat's products, which are meant for any woman who cares about her overall health and well-being.
+
+### Benefits, motivators and prompts:
+
+Bellabeat can integrate functions such as rewards or incentives and remind users to hit certain goals. These goals can help users achieve better health, deeper sleep, cognitive health, and overall well-being with virtual accomplishment via medals or prizes, such as discounts or offers from affiliated companies that promote the same ambitions and goals as Bellabeat, strengthening their brand and deepening their ties in modern life.
+
+Lastly, allow users to set reminders automatically or user-based to give support and encouragement to their goals and aspirations. Recommendations of products of varying types to help them hit their goals from affiliated companies who promote the same ambitions and goals as Bellabeat, strengthening their brand and deepening their ties in modern life.
+
